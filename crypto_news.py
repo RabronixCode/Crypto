@@ -24,6 +24,9 @@ driver.get(url)
 
 wait = WebDriverWait(driver, 20)
 
+# UNIQUE ARTICLE LIST
+unique_articles = []
+
 # Clicking cookie ACCEPT
 cookie_button = driver.find_element(By.ID, "cookie-consent-button")
 cookie_button.click()
@@ -36,6 +39,20 @@ while True:
     if i == len(top_articles):
         break
 
+    for u in unique_articles:
+        print(u)
+    # Traverse the directory structure
+    for root, _, files in os.walk("C:\\Users\\User\\Desktop\\Python\\Crypto"):
+        for file in files:
+            # Process only .txt files
+            if not file.endswith(".txt"):
+                continue
+            file_name, file_extension = os.path.splitext(file)  # Separate name and extension
+            if file_name in unique_articles:
+                break
+        continue
+    
+    unique_articles.append(top_articles[i].text)
     # Converting time ######################################################
     top_articles_time = driver.find_elements(By.CLASS_NAME, "post-loop__date")
     datetime_str = top_articles_time[i].get_attribute("datetime")
@@ -57,7 +74,7 @@ while True:
     for t in text_elements:
         with open(f"C:\\Users\\User\\Desktop\\Python\\Crypto\\Crypto_news_top_articles\\{title}.txt", "a", encoding="utf-8") as file:
             file.write(f"{t.text} \n")
-    driver.back()
+    driver.get(url)
     i+=1
 
 more_news_button = driver.find_element(By.XPATH, "//*[@id='menu-item-14051377']/a")
@@ -69,9 +86,29 @@ bitcoin_news_button.click()
 i = 0
 popup = False
 while True:
+
     top_articles = driver.find_elements(By.CLASS_NAME, "post-loop__link")
     if i == len(top_articles):
         break
+
+    for u in unique_articles:
+        print(u)
+    if top_articles[i].text in unique_articles:
+        i+=1
+        continue
+    # Traverse the directory structure
+    for root, _, files in os.walk("C:\\Users\\User\\Desktop\\Python\\Crypto"):
+        for file in files:
+            # Process only .txt files
+            if not file.endswith(".txt"):
+                continue
+            file_name, file_extension = os.path.splitext(file)  # Separate name and extension
+            print(top_articles[i].text, "SSSSSSSSS", file_name)
+            if file_name in unique_articles:
+                break
+        continue
+    
+    unique_articles.append(top_articles[i].text)
     # Converting time ######################################################
     top_articles_time = driver.find_elements(By.CLASS_NAME, "post-loop__date")
     datetime_str = top_articles_time[i].get_attribute("datetime")
